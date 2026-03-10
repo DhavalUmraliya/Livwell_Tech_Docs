@@ -19,23 +19,28 @@ def parse_markdown(file_path):
     lang = "javascript" # default
     
     # Process split sections (even indices are headers, odd indices are following text)
+    processed_headers = []
     for i in range(1, len(sections), 2):
         header = sections[i].lower()
         body = sections[i+1].strip()
+        processed_headers.append(header)
         
         if "summary" in header:
             summary = body
-        elif "details" in header or "tech" in header or "documentation" in header:
-            tech_docs = body
-        elif "implementation" in header or "example" in header:
-            # Extract code block if it exists in implementation section
-            code_match = re.search(r'```(\w+)?\n(.*?)\n```', body, re.DOTALL)
-            if code_match:
-                lang = code_match.group(1) if code_match.group(1) else "javascript"
-                code_block = code_match.group(2)
+        elif any(kw in header for kw in ["details", "tech", "documentation", "feature", "flow", "rule", "management", "architecture", "state"]):
+            tech_docs += f"\n\n### {sections[i]}\n{body}"
+        elif any(kw in header for kw in ["implementation", "example", "code"]):
+            # Extract code blocks
+            code_blocks = re.findall(r'```(\w+)?\n(.*?)\n```', body, re.DOTALL)
+            if code_blocks:
+                for match in code_blocks:
+                    lang = match[0] if match[0] else "javascript"
+                    code_block += match[1] + "\n\n"
             else:
-                # If no code block, just take the text as tech docs
-                tech_docs += "\n\n" + body
+                tech_docs += f"\n\n### {sections[i]}\n{body}"
+        else:
+            # Catch all other sections as tech docs
+            tech_docs += f"\n\n### {sections[i]}\n{body}"
                 
     # Fallback for summary if not found in H2
     if not summary:

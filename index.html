@@ -755,6 +755,11 @@
             state.platform = platformId;
             const config = content[platformId];
 
+            if (!config || !config.modules || config.modules.length === 0) {
+                alert("This platform has no documentation modules yet. Please add .md files to the docs folder.");
+                return;
+            }
+
             // Set platform theme color
             document.body.style.setProperty('--active-color', config.accent);
             document.body.style.setProperty('--active-rgb', config.rgb);
