@@ -90,11 +90,13 @@ def generate():
             
         # Walk through subfolders (e.g., MonopolyDocs)
         for root, dirs, files in os.walk(platform_dir):
-            category_name = os.path.basename(root)
-            if category_name == platform:
+            rel_root = os.path.relpath(root, platform_dir)
+            
+            if rel_root == '.':
                 category_name = "Core Modules"
             else:
-                category_name = category_name.replace('_', ' ').replace('-', ' ').title()
+                top_folder = rel_root.split(os.sep)[0]
+                category_name = top_folder.replace('_', ' ').replace('-', ' ').title()
                 
             for file in sorted(files):
                 if file.endswith('.md'):
