@@ -1067,6 +1067,29 @@
                     </div>`;
             }
 
+            if (mod.media && mod.media.length > 0) {
+                console.log("Rendering media for", moduleId, mod.media);
+                html += `
+                    <div style="margin-bottom: 2.5rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--active-color); opacity: 0.8;">Media & References</h2>
+                        <div class="media-grid">
+                            ${mod.media.map(m => {
+                    const isVideo = m.endsWith('.mp4') || m.endsWith('.mov');
+                    const name = m.split('/').pop();
+                    return `
+                                    <div class="media-item">
+                                        ${isVideo ?
+                            `<video src="${m}" controls style="max-height: 500px; object-fit: contain;"></video>` :
+                            `<img src="${m}" alt="${name}" onclick="window.open('${m}', '_blank')" style="cursor: pointer; max-height: 500px; object-fit: contain;">`
+                        }
+                                        <div class="media-item-caption">${name}</div>
+                                    </div>
+                                `;
+                }).join('')}
+                        </div>
+                    </div>`;
+            }
+
             if (mod.techDocs && mod.techDocs.trim()) {
                 html += `
                     <div style="margin-bottom: 2.5rem;">
@@ -1089,27 +1112,6 @@
                     </div>`;
             }
 
-            if (mod.media && mod.media.length > 0) {
-                html += `
-                    <div style="margin-bottom: 2.5rem;">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--active-color); opacity: 0.8;">Media & References</h2>
-                        <div class="media-grid">
-                            ${mod.media.map(m => {
-                    const isVideo = m.endsWith('.mp4') || m.endsWith('.mov');
-                    const name = m.split('/').pop();
-                    return `
-                                    <div class="media-item">
-                                        ${isVideo ?
-                            `<video src="${m}" controls></video>` :
-                            `<img src="${m}" alt="${name}" onclick="window.open('${m}', '_blank')">`
-                        }
-                                        <div class="media-item-caption">${name}</div>
-                                    </div>
-                                `;
-                }).join('')}
-                        </div>
-                    </div>`;
-            }
 
             html += `</div>`;
 
