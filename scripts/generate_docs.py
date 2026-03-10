@@ -1,10 +1,27 @@
 import os
 import json
 import re
+import subprocess
+
+def get_git_metadata(file_path):
+    try:
+        # Get last commit author and date
+        result = subprocess.run(
+            ['git', 'log', '-1', '--format=%an|%ad', '--date=format:%b %d, %Y', file_path],
+            capture_output=True, text=True, check=True
+        )
+        if result.stdout:
+            author, date = result.stdout.strip().split('|')
+            return author, date
+    except Exception:
+        pass
+    return "Unknown", "Recent"
 
 def parse_markdown(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
+    
+    author, last_updated = get_git_metadata(file_path)
     
     # Extract H1 title (e.g., # Authentication)
     title_match = re.search(r'^# (.*)', content, re.MULTILINE)
@@ -52,7 +69,9 @@ def parse_markdown(file_path):
         "summary": summary,
         "techDocs": tech_docs,
         "code": code_block,
-        "lang": lang
+        "lang": lang,
+        "author": author,
+        "lastUpdated": last_updated
     }
 
 def generate():
