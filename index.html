@@ -579,6 +579,85 @@
             border-top: 1px solid var(--border-color);
         }
 
+        /* --- Search --- */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0 0.5rem;
+            margin-right: 1rem;
+            width: 250px;
+            transition: var(--transition);
+        }
+
+        .search-container:focus-within {
+            border-color: var(--active-color, var(--text-secondary));
+            box-shadow: 0 0 0 2px rgba(var(--active-rgb, 128, 128, 128), 0.1);
+        }
+
+        .search-container svg {
+            color: var(--text-secondary);
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 0.5rem;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.8125rem;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 120%;
+            left: 0;
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 2000;
+        }
+
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--surface-color);
+        }
+
+        .search-result-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-bottom: 0.125rem;
+        }
+
+        .search-result-platform {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
         /* --- Mobile --- */
         .mobile-toggle {
             display: none;
@@ -587,6 +666,10 @@
         @media (max-width: 768px) {
             .navbar {
                 padding: 0 1rem;
+            }
+
+            .search-container {
+                display: none;
             }
 
             .sidebar {
@@ -726,6 +809,14 @@
             <span class="badge-internal">Internal Only</span>
         </div>
         <div class="nav-right">
+            <div class="search-container">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search documentation..." oninput="handleSearch()">
+                <div id="searchResults" class="search-results"></div>
+            </div>
             <button class="theme-toggle" onclick="logout()"
                 style="margin-right: 0.5rem; font-size: 0.75rem; font-weight: 600; padding: 0.5rem 0.75rem;">
                 Logout
@@ -1158,6 +1249,72 @@
             btn.innerText = 'Copied!';
             setTimeout(() => btn.innerText = 'Copy', 2000);
         }
+
+        // --- Search ---
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+
+            if (query.trim() === '') {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+
+            let results = [];
+
+            for (const [platformId, platformData] of Object.entries(content)) {
+                if (!platformData.modules) continue;
+
+                platformData.modules.forEach(mod => {
+                    const searchable = [mod.title, mod.summary, mod.techDocs, mod.category].join(' ').toLowerCase();
+                    if (searchable.includes(query)) {
+                        results.push({
+                            platform: platformId,
+                            module: mod
+                        });
+                    }
+                });
+            }
+
+            if (results.length > 0) {
+                // Limit results to 10
+                const limitedResults = results.slice(0, 10);
+                resultsContainer.innerHTML = limitedResults.map(r => `
+                    <div class="search-result-item" onclick="navigateToSearch('${r.platform}', '${r.module.id}', '${r.module.category}')">
+                        <div class="search-result-title">${r.module.title}</div>
+                        <div class="search-result-platform">${r.platform} > ${r.module.category}</div>
+                    </div>
+                `).join('');
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContainer.innerHTML = `<div class="search-result-item"><div class="search-result-title" style="color: var(--text-secondary);">No results found</div></div>`;
+                resultsContainer.style.display = 'block';
+            }
+        }
+
+        function navigateToSearch(platform, moduleId, category) {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+
+            const config = content[platform];
+            document.body.style.setProperty('--active-color', config.accent);
+            document.body.style.setProperty('--active-rgb', config.rgb);
+
+            state.platform = platform;
+            state.category = category;
+
+            renderSidebar(platform);
+            showView('platform');
+            showModule(moduleId);
+        }
+
+        document.addEventListener('click', function (event) {
+            const container = document.querySelector('.search-container');
+            const results = document.getElementById('searchResults');
+            if (container && !container.contains(event.target) && results) {
+                results.style.display = 'none';
+            }
+        });
 
         // --- Routing ---
         function initFromHash() {
