@@ -267,6 +267,50 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
 
+        .project-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border-left: 4px solid var(--active-color);
+        }
+
+        .project-card:hover {
+            background: white;
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            background: rgba(var(--active-rgb), 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--active-color);
+            font-weight: 500;
+        }
+
         .view-docs-btn {
             display: inline-flex;
             align-items: center;
@@ -838,11 +882,10 @@
             const config = content[platformId];
 
             if (!config || !config.modules || config.modules.length === 0) {
-                alert("This platform has no documentation modules yet. Please add .md files to the docs folder.");
+                alert("This platform has no documentation modules yet.");
                 return;
             }
 
-            // Set platform theme color
             document.body.style.setProperty('--active-color', config.accent);
             document.body.style.setProperty('--active-rgb', config.rgb);
 
@@ -854,45 +897,79 @@
 
         function showPlatformDashboard(platformId) {
             state.module = null;
-            const platformConfig = content[platformId];
-            const modules = platformConfig.modules;
+            state.category = null;
+            const modules = content[platformId].modules;
             const categories = [...new Set(modules.map(m => m.category))];
 
             const container = document.getElementById('doc-content');
 
             let html = `
                 <div class="doc-page active">
-                    <h1 style="margin-bottom: 0.5rem;">${platformId.toUpperCase()} Documentation</h1>
-                    <p style="color: var(--text-secondary); margin-bottom: 3rem;">Browse all available modules and technical guides for ${platformId.toUpperCase()}.</p>
+                    <div class="breadcrumb">
+                        <a href="#" onclick="showView('home')">Home</a>
+                        <span>/</span>
+                        <span>${platformId.toUpperCase()} Docs</span>
+                    </div>
+                    <h1 style="margin-bottom: 2rem;">Projects & Components</h1>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.25rem;">
             `;
 
             categories.forEach(cat => {
-                const catModules = modules.filter(m => m.category === cat);
+                const count = modules.filter(m => m.category === cat).length;
+                const emoji = cat.toLowerCase().includes('monopoly') ? '🎲' :
+                    cat.toLowerCase().includes('habit') ? '📈' :
+                        cat.toLowerCase().includes('core') ? '⚙️' : '📁';
+
                 html += `
-                    <div style="margin-bottom: 3rem;">
-                        <h2 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--active-color); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${cat}</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-                            ${catModules.map(mod => `
-                                <div class="module-index-card" onclick="showModule('${mod.id}')">
-                                    <h3 style="margin-bottom: 0.75rem; color: var(--text-primary); font-size: 1.1rem;">${mod.title}</h3>
-                                    <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${mod.summary}</p>
-                                    <div style="margin-top: 1.25rem; font-size: 0.75rem; font-weight: 600; color: var(--active-color); display: flex; align-items: center; gap: 0.25rem;">
-                                        Read Documentation 
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                    </div>
-                                </div>
-                            `).join('')}
+                    <div class="project-card" onclick="showCategory('${cat}')">
+                        <div class="project-icon">${emoji}</div>
+                        <div>
+                            <h3 style="margin-bottom: 0.25rem;">${cat}</h3>
+                            <p style="font-size: 0.8125rem; color: var(--text-secondary);">${count} Documentation Files</p>
                         </div>
                     </div>
                 `;
             });
 
-            html += `</div>`;
+            html += `</div></div>`;
             container.innerHTML = html;
-
-            // Update sidebar active state (clear all)
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
             window.scrollTo(0, 0);
+        }
+
+        function showCategory(categoryName) {
+            state.category = categoryName;
+            state.module = null;
+            const modules = content[state.platform].modules.filter(m => m.category === categoryName);
+
+            const container = document.getElementById('doc-content');
+            let html = `
+                <div class="doc-page active">
+                    <div class="breadcrumb">
+                        <a href="#" onclick="showView('home')">Home</a>
+                        <span>/</span>
+                        <a href="#/${state.platform}" onclick="showPlatformDashboard('${state.platform}')">${state.platform.toUpperCase()}</a>
+                        <span>/</span>
+                        <span>${categoryName}</span>
+                    </div>
+                    <h1 style="margin-bottom: 0.5rem;">${categoryName}</h1>
+                    <p style="color: var(--text-secondary); margin-bottom: 3rem;">Detailed documentation and screen guides for the ${categoryName} module.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                        ${modules.map(mod => `
+                            <div class="module-index-card" onclick="showModule('${mod.id}')">
+                                <h3 style="margin-bottom: 0.75rem; color: var(--text-primary); font-size: 1.1rem;">${mod.title}</h3>
+                                <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${mod.summary}</p>
+                                <div style="margin-top: 1.25rem; font-size: 0.75rem; font-weight: 600; color: var(--active-color); display: flex; align-items: center; gap: 0.25rem;">
+                                    Read Details <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            window.scrollTo(0, 0);
+            window.location.hash = `#/${state.platform}/${categoryName.replace(/\s+/g, '_')}`;
         }
 
         function renderSidebar(platformId) {
@@ -1010,7 +1087,7 @@
 
             const parts = hash.split('/');
             const platform = parts[1];
-            const module = parts[2];
+            const name = parts[2] ? parts[2].replace(/_/g, ' ') : null;
 
             if (platform && content[platform]) {
                 state.platform = platform;
@@ -1020,8 +1097,18 @@
                 renderSidebar(platform);
                 showView('platform');
 
-                if (module) {
-                    showModule(module);
+                if (name) {
+                    // Check if it's a category or a module
+                    const isMod = config.modules.find(m => m.id === name.toLowerCase().replace(/\s+/g, '-'));
+                    const isCat = [...new Set(config.modules.map(m => m.category))].includes(name);
+
+                    if (isMod) {
+                        showModule(isMod.id);
+                    } else if (isCat) {
+                        showCategory(name);
+                    } else {
+                        showPlatformDashboard(platform);
+                    }
                 } else {
                     showPlatformDashboard(platform);
                 }
