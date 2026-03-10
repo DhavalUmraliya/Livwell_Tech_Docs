@@ -23,6 +23,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
 
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- Dynamic Content from data.js -->
     <script src="data.js"></script>
 
@@ -425,13 +428,17 @@
         }
 
         .markdown-body h3 {
-            font-size: 1.1rem;
-            margin: 1.5rem 0 0.5rem;
-            color: var(--text-primary);
+            font-size: 1.25rem;
+            margin: 2rem 0 1rem;
+            color: var(--active-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
         }
 
         .markdown-body p {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
         }
 
         .markdown-body ul,
@@ -439,6 +446,38 @@
             margin-bottom: 1.5rem;
             padding-left: 1.5rem;
             color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .markdown-body code:not(pre code) {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--accent-web);
         }
 
         /* --- Mobile --- */
@@ -816,41 +855,35 @@
 
             if (mod.summary && mod.summary.trim()) {
                 html += `
-                    <div style="margin-bottom: 2rem;">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--active-color);">Module Summary</h2>
-                        <p>${mod.summary}</p>
+                    <div style="margin-bottom: 2.5rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--active-color); opacity: 0.8;">Overview</h2>
+                        <div class="markdown-body">${marked.parse(mod.summary)}</div>
                     </div>`;
             }
 
             if (mod.techDocs && mod.techDocs.trim()) {
                 html += `
-                    <div style="margin-bottom: 2rem;">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--active-color);">Technical Documentation</h2>
-                        <div class="markdown-body">${mod.techDocs}</div>
+                    <div style="margin-bottom: 2.5rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--active-color); opacity: 0.8;">Technical Documentation</h2>
+                        <div class="markdown-body">${marked.parse(mod.techDocs)}</div>
                     </div>`;
             }
 
             if (mod.code && mod.code.trim()) {
                 html += `
-                    <h2>Implementation Example</h2>
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span class="lang-tag">${mod.lang}</span>
-                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <div style="margin-bottom: 2.5rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--active-color); opacity: 0.8;">Implementation Example</h2>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="lang-tag">${mod.lang}</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre><code class="language-${mod.lang}">${mod.code}</code></pre>
                         </div>
-                        <pre><code class="language-${mod.lang}">${mod.code}</code></pre>
                     </div>`;
             }
 
-            html += `
-                    <div class="callout">
-                        <div class="callout-icon">💡</div>
-                        <div class="callout-text">
-                            <strong>Internal Note:</strong> Ensure you are using the latest version of the ${state.platform.toUpperCase()} library (minimum v4.0) to support these features.
-                        </div>
-                    </div>
-                </div>
-            `;
+            html += `</div>`;
 
             container.innerHTML = html;
 
