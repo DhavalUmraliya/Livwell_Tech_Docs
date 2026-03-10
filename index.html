@@ -424,6 +424,23 @@
             font-size: 0.875rem;
         }
 
+        .markdown-body h3 {
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .markdown-body p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
         /* --- Mobile --- */
         .mobile-toggle {
             display: none;
@@ -794,20 +811,27 @@
             const mod = platformConfig.modules.find(m => m.id === moduleId);
 
             const container = document.getElementById('doc-content');
-            container.innerHTML = `
-                <div class="doc-page active">
-                    <h1>${mod.title}</h1>
-                    
+
+            let html = `<div class="doc-page active"><h1>${mod.title}</h1>`;
+
+            if (mod.summary && mod.summary.trim()) {
+                html += `
                     <div style="margin-bottom: 2rem;">
                         <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--active-color);">Module Summary</h2>
                         <p>${mod.summary}</p>
-                    </div>
+                    </div>`;
+            }
 
+            if (mod.techDocs && mod.techDocs.trim()) {
+                html += `
                     <div style="margin-bottom: 2rem;">
                         <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--active-color);">Technical Documentation</h2>
-                        <p>${mod.techDocs}</p>
-                    </div>
-                    
+                        <div class="markdown-body">${mod.techDocs}</div>
+                    </div>`;
+            }
+
+            if (mod.code && mod.code.trim()) {
+                html += `
                     <h2>Implementation Example</h2>
                     <div class="code-block">
                         <div class="code-header">
@@ -815,8 +839,10 @@
                             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         </div>
                         <pre><code class="language-${mod.lang}">${mod.code}</code></pre>
-                    </div>
+                    </div>`;
+            }
 
+            html += `
                     <div class="callout">
                         <div class="callout-icon">💡</div>
                         <div class="callout-text">
@@ -825,6 +851,8 @@
                     </div>
                 </div>
             `;
+
+            container.innerHTML = html;
 
             // Update sidebar active state
             document.querySelectorAll('.sidebar-item').forEach(item => {
