@@ -61,7 +61,9 @@ const dynamicContent = {
                 "lastUpdated": "Mar 10, 2026",
                 "id": "overview",
                 "category": "Monopolydocs",
-                "media": []
+                "media": [
+                    "docs/ios/MonopolyDocs/MonopolyDocs.png"
+                ]
             },
             {
                 "title": "Screen: Dice Roll Gameplay (Shake Dice)",

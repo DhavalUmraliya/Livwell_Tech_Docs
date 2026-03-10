@@ -109,11 +109,14 @@ def generate():
                     # Look for associated media files
                     media_files = []
                     valid_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.mp4', '.mov')
+                    dir_name = os.path.basename(root)
                     for f in files:
-                        if f.startswith(base_name) and f.endswith(valid_extensions):
-                            # Store relative path for web access
+                        # Matches exact module name OR matches the folder name (general project media)
+                        if (f.startswith(base_name) or (base_name.lower() == 'overview' and f.startswith(dir_name))) and f.endswith(valid_extensions):
+                            # Avoid duplicates
                             rel_path = os.path.relpath(os.path.join(root, f), os.getcwd())
-                            media_files.append(rel_path)
+                            if rel_path not in media_files:
+                                media_files.append(rel_path)
                     
                     module_data["media"] = media_files
                     
