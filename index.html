@@ -249,6 +249,24 @@
             flex: 1;
         }
 
+        .module-index-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .module-index-card:hover {
+            border-color: var(--active-color);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
         .view-docs-btn {
             display: inline-flex;
             align-items: center;
@@ -829,9 +847,52 @@
             document.body.style.setProperty('--active-rgb', config.rgb);
 
             renderSidebar(platformId);
-            showModule(config.modules[0].id);
+            showPlatformDashboard(platformId);
             showView('platform');
             window.location.hash = `#/${platformId}`;
+        }
+
+        function showPlatformDashboard(platformId) {
+            state.module = null;
+            const platformConfig = content[platformId];
+            const modules = platformConfig.modules;
+            const categories = [...new Set(modules.map(m => m.category))];
+
+            const container = document.getElementById('doc-content');
+
+            let html = `
+                <div class="doc-page active">
+                    <h1 style="margin-bottom: 0.5rem;">${platformId.toUpperCase()} Documentation</h1>
+                    <p style="color: var(--text-secondary); margin-bottom: 3rem;">Browse all available modules and technical guides for ${platformId.toUpperCase()}.</p>
+            `;
+
+            categories.forEach(cat => {
+                const catModules = modules.filter(m => m.category === cat);
+                html += `
+                    <div style="margin-bottom: 3rem;">
+                        <h2 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--active-color); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">${cat}</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                            ${catModules.map(mod => `
+                                <div class="module-index-card" onclick="showModule('${mod.id}')">
+                                    <h3 style="margin-bottom: 0.75rem; color: var(--text-primary); font-size: 1.1rem;">${mod.title}</h3>
+                                    <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${mod.summary}</p>
+                                    <div style="margin-top: 1.25rem; font-size: 0.75rem; font-weight: 600; color: var(--active-color); display: flex; align-items: center; gap: 0.25rem;">
+                                        Read Documentation 
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // Update sidebar active state (clear all)
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            window.scrollTo(0, 0);
         }
 
         function renderSidebar(platformId) {
@@ -939,19 +1000,34 @@
 
         // --- Routing ---
         function initFromHash() {
+            if (!state.authenticated) return;
+
             const hash = window.location.hash;
-            if (hash.startsWith('#/')) {
-                const parts = hash.split('/');
-                const platform = parts[1];
-                const mod = parts[2];
-                if (content[platform]) {
-                    showPlatform(platform);
-                    if (mod) showModule(mod);
+            if (!hash || hash === '#/') {
+                showView('home');
+                return;
+            }
+
+            const parts = hash.split('/');
+            const platform = parts[1];
+            const module = parts[2];
+
+            if (platform && content[platform]) {
+                state.platform = platform;
+                const config = content[platform];
+                document.body.style.setProperty('--active-color', config.accent);
+                document.body.style.setProperty('--active-rgb', config.rgb);
+                renderSidebar(platform);
+                showView('platform');
+
+                if (module) {
+                    showModule(module);
+                } else {
+                    showPlatformDashboard(platform);
                 }
             } else {
                 showView('home');
             }
-            hljs.highlightAll();
         }
 
         window.addEventListener('load', () => {
