@@ -102,8 +102,20 @@ def generate():
                     module_data = parse_markdown(file_path)
                     
                     # Add ID and Category
-                    module_data["id"] = file.replace('.md', '').lower().replace(' ', '-')
+                    base_name = file.replace('.md', '')
+                    module_data["id"] = base_name.lower().replace(' ', '-')
                     module_data["category"] = category_name
+                    
+                    # Look for associated media files
+                    media_files = []
+                    valid_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.mp4', '.mov')
+                    for f in files:
+                        if f.startswith(base_name) and f.endswith(valid_extensions):
+                            # Store relative path for web access
+                            rel_path = os.path.relpath(os.path.join(root, f), os.getcwd())
+                            media_files.append(rel_path)
+                    
+                    module_data["media"] = media_files
                     
                     result[platform]["modules"].append(module_data)
 

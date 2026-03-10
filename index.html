@@ -542,6 +542,43 @@
             color: var(--accent-web);
         }
 
+        /* --- Media --- */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .media-item {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .media-item:hover {
+            border-color: var(--active-color);
+            transform: scale(1.02);
+        }
+
+        .media-item img,
+        .media-item video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+        }
+
+        .media-item-caption {
+            padding: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
         /* --- Mobile --- */
         .mobile-toggle {
             display: none;
@@ -1048,6 +1085,28 @@
                                 <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                             </div>
                             <pre><code class="language-${mod.lang}">${mod.code}</code></pre>
+                        </div>
+                    </div>`;
+            }
+
+            if (mod.media && mod.media.length > 0) {
+                html += `
+                    <div style="margin-bottom: 2.5rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--active-color); opacity: 0.8;">Media & References</h2>
+                        <div class="media-grid">
+                            ${mod.media.map(m => {
+                    const isVideo = m.endsWith('.mp4') || m.endsWith('.mov');
+                    const name = m.split('/').pop();
+                    return `
+                                    <div class="media-item">
+                                        ${isVideo ?
+                            `<video src="${m}" controls></video>` :
+                            `<img src="${m}" alt="${name}" onclick="window.open('${m}', '_blank')">`
+                        }
+                                        <div class="media-item-caption">${name}</div>
+                                    </div>
+                                `;
+                }).join('')}
                         </div>
                     </div>`;
             }

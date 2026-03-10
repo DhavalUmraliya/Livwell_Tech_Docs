@@ -12,7 +12,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "api_integration",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly Analytics & Event Tracking",
@@ -23,7 +24,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "analytics_tracking",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly Architecture Overview",
@@ -34,7 +36,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "architecture",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly Localization & Multi-language Support",
@@ -45,7 +48,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "localization",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly Module Overview",
@@ -56,7 +60,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "overview",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Screen: Dice Roll Gameplay (Shake Dice)",
@@ -67,7 +72,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_dicerollgameplay",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Screen: Game Rules & Terms",
@@ -78,7 +84,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_gamerules_tc",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Screen: Rewards History (Win Big)",
@@ -89,7 +96,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_history_rewards",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Screen: Monopoly Dashboard (Roll & Win)",
@@ -100,7 +108,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_monopolydashboard",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Screen: Prize Reveal",
@@ -111,7 +120,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_prizereveal",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Screen: Task Description",
@@ -122,7 +132,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_taskdescription",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly State Management & Architecture",
@@ -133,7 +144,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "state_management",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly Testing & QA Guide",
@@ -144,7 +156,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "testing_guide",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Monopoly Theme & Visual Assets",
@@ -155,7 +168,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "theme_assets",
-                "category": "Monopolydocs"
+                "category": "Monopolydocs",
+                "media": []
             },
             {
                 "title": "Habit Tracker Architecture",
@@ -166,7 +180,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "architecture",
-                "category": "Habittrackerdocs"
+                "category": "Habittrackerdocs",
+                "media": []
             },
             {
                 "title": "Habit Tracker Module Overview",
@@ -177,7 +192,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "overview",
-                "category": "Habittrackerdocs"
+                "category": "Habittrackerdocs",
+                "media": []
             },
             {
                 "title": "Screen: Choose Habits (Add Habits)",
@@ -188,7 +204,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_addhabits",
-                "category": "Habittrackerdocs"
+                "category": "Habittrackerdocs",
+                "media": []
             },
             {
                 "title": "Screen: Habit Tracking Dashboard",
@@ -199,7 +216,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_habitdashboard",
-                "category": "Habittrackerdocs"
+                "category": "Habittrackerdocs",
+                "media": []
             },
             {
                 "title": "Screen: Reminders & Notes",
@@ -210,7 +228,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_reminders_notes",
-                "category": "Habittrackerdocs"
+                "category": "Habittrackerdocs",
+                "media": []
             },
             {
                 "title": "Screen: Streak Dashboard & Activity Details",
@@ -221,7 +240,8 @@ const dynamicContent = {
                 "author": "dhavalUmraliya",
                 "lastUpdated": "Mar 10, 2026",
                 "id": "screen_streakdetails",
-                "category": "Habittrackerdocs"
+                "category": "Habittrackerdocs",
+                "media": []
             }
         ]
     },
