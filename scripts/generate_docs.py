@@ -59,8 +59,8 @@ def generate():
     docs_root = 'docs'
     platforms = ['ios', 'android', 'web']
     result = {
-        "ios": {"accent": "#007aff", "rgb": "0, 122, 255", "modules": []},
-        "android": {"accent": "#3ddc84", "rgb": "61, 220, 132", "modules": []},
+        "ios": {"accent": "#F03457", "rgb": "240, 52, 87", "modules": []},
+        "android": {"accent": "#2AD189", "rgb": "42, 209, 137", "modules": []},
         "web": {"accent": "#a855f7", "rgb": "168, 85, 247", "modules": []}
     }
 

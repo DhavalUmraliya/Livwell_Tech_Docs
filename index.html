@@ -31,14 +31,14 @@
 
     <style>
         :root {
-            --bg-color: #0d1117;
-            --surface-color: #161b22;
-            --border-color: #30363d;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --text-muted: #484f58;
-            --accent-ios: #007aff;
-            --accent-android: #3ddc84;
+            --bg-color: #201E1F;
+            --surface-color: #2a2728;
+            --border-color: #3d393b;
+            --text-primary: #FDFCFC;
+            --text-secondary: #958D90;
+            --text-muted: #6b6567;
+            --accent-ios: #F03457;
+            --accent-android: #2AD189;
             --accent-web: #a855f7;
             --accent-color: var(--accent-ios);
             /* Default */
@@ -763,8 +763,8 @@
         }
         const fallbackContent = {
             ios: {
-                accent: '#007aff',
-                rgb: '0, 122, 255',
+                accent: '#F03457',
+                rgb: '240, 52, 87',
                 modules: [
                     { category: 'Core Modules', id: 'auth', title: 'Authentication', summary: 'Standardized authentication flow for iOS apps using OAuth and biometric verification.', techDocs: 'The authentication module leverages the LocalAuthentication framework and provides a generic Keychain wrapper for secure token storage.', code: 'import UIKit\nimport LocalAuthentication\n\nfunc authenticate() {\n    let context = LAContext()\n    context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Log in to proceed") { success, error in\n        // Handle result\n    }\n}', lang: 'swift' },
                     { category: 'Core Modules', id: 'net', title: 'Networking', summary: 'Robust networking layer built on top of async/await URLSession.', techDocs: 'Supports request interceptors, automatic retries, and strongly typed JSON decoding.', code: 'struct APIClient {\n    func fetch<T: Decodable>(_ route: Route) async throws -> T {\n        let (data, response) = try await URLSession.shared.data(for: route.request)\n        return try JSONDecoder().decode(T.self, from: data)\n    }\n}', lang: 'swift' },
@@ -773,8 +773,8 @@
                 ]
             },
             android: {
-                accent: '#3ddc84',
-                rgb: '61, 220, 132',
+                accent: '#2AD189',
+                rgb: '42, 209, 137',
                 modules: [
                     { category: 'Core Modules', id: 'auth', title: 'Authentication', summary: 'Android authentication using Google Play Services and custom OAuth flows.', techDocs: 'Handles token refresh and biometric prompts using the BiometricManager API.', code: 'val signInRequest = BeginSignInRequest.builder()\n    .setGoogleIdTokenRequestOptions(googleIdOptions)\n    .build()\n\noneTapClient.beginSignIn(signInRequest).addOnSuccessListener { /* ... */ }', lang: 'kotlin' },
                     { category: 'Core Modules', id: 'net', title: 'Networking', desc: 'Retrofit and OkHttp configuration for stable API calls.', code: '@GET("users/{user}/repos")\nsuspend fun listRepos(@Path("user") user: String): List<Repo>', lang: 'kotlin', summary: 'Standardized network client for Android.', techDocs: 'Uses Retrofit2 with Coroutines for efficient async networking.' },

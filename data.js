@@ -1,7 +1,7 @@
 const dynamicContent = {
     "ios": {
-        "accent": "#007aff",
-        "rgb": "0, 122, 255",
+        "accent": "#F03457",
+        "rgb": "240, 52, 87",
         "modules": [
             {
                 "title": "Monopoly API & Data Integration Guide",
@@ -132,8 +132,8 @@ const dynamicContent = {
         ]
     },
     "android": {
-        "accent": "#3ddc84",
-        "rgb": "61, 220, 132",
+        "accent": "#2AD189",
+        "rgb": "42, 209, 137",
         "modules": []
     },
     "web": {
