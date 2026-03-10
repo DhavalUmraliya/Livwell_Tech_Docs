@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Dev Docs</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+        id="hljs-dark">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+        id="hljs-light" disabled>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --surface-color: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-muted: #484f58;
+            --accent-ios: #007aff;
+            --accent-android: #3ddc84;
+            --accent-web: #a855f7;
+            --accent-color: var(--accent-ios);
+            /* Default */
+
+            --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --sidebar-width: 260px;
+            --navbar-height: 64px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --surface-color: #f6f8fa;
+            --border-color: #d0d7de;
+            --text-primary: #1f2328;
+            --text-secondary: #656d76;
+            --text-muted: #afb8c1;
+            --accent-ios: #0969da;
+            --accent-android: #1a7f37;
+            --accent-web: #8250df;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Components --- */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+
+        .btn-back:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .badge-internal {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            height: var(--navbar-height);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            background: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-placeholder {
+            width: 32px;
+            height: 32px;
+            background: var(--text-primary);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E") no-repeat center;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Views --- */
+        .view {
+            display: none;
+            min-height: calc(100vh - var(--navbar-height));
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .view.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Home View --- */
+        #home-view.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .home-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .home-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .platform-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--platform-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(var(--platform-rgb), 0.1);
+            color: var(--platform-color);
+        }
+
+        .platform-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .platform-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            flex: 1;
+        }
+
+        .view-docs-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--platform-color);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .card-ios {
+            --platform-color: var(--accent-ios);
+            --platform-rgb: 0, 122, 255;
+        }
+
+        .card-android {
+            --platform-color: var(--accent-android);
+            --platform-rgb: 61, 220, 132;
+        }
+
+        .card-web {
+            --platform-color: var(--accent-web);
+            --platform-rgb: 168, 85, 247;
+        }
+
+        .sidebar-category {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 1.5rem 1rem 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- Platform View --- */
+        #platform-view.active {
+            display: flex;
+            align-items: flex-start;
+            max-width: 100vw;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--navbar-height));
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: var(--navbar-height);
+            background: var(--bg-color);
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 2px;
+            transition: var(--transition);
+        }
+
+        .sidebar-item:hover {
+            background: var(--surface-color);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: rgba(var(--active-rgb), 0.1);
+            color: var(--active-color);
+            font-weight: 600;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 3rem 4rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .doc-page {
+            display: none;
+        }
+
+        .doc-page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Callout --- */
+        .callout {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--active-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .callout-icon {
+            font-size: 1.25rem;
+        }
+
+        .callout-text {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        /* --- Code Block --- */
+        .code-block {
+            position: relative;
+            background: #0d1117;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .lang-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        pre {
+            padding: 1.25rem;
+            margin: 0;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+        }
+
+        /* --- Mobile --- */
+        .mobile-toggle {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                z-index: 1000;
+                width: 280px;
+                transition: left 0.3s ease;
+                background: var(--bg-color);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .content-area {
+                padding: 2rem 1.5rem;
+            }
+
+            .home-header h1 {
+                font-size: 2.25rem;
+            }
+        }
+
+        /* --- Login Overlay --- */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-card h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card p {
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent-ios);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .login-error {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        body.unauthenticated .navbar,
+        body.unauthenticated .view {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body data-platform="ios" class="unauthenticated">
+
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-card">
+            <div class="logo-placeholder" style="margin: 0 auto 1.5rem; width: 48px; height: 48px;"></div>
+            <h2>Internal Access Only</h2>
+            <p>Please enter your credentials to view documentation.</p>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" id="username" class="login-input" placeholder="Username" required>
+                <input type="password" id="password" class="login-input" placeholder="Password" required>
+                <button type="submit" class="login-btn">Secure Login</button>
+            </form>
+            <div id="login-error" class="login-error">Invalid credentials. Please try again.</div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="theme-toggle mobile-toggle" onclick="toggleSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                </svg>
+            </button>
+            <a href="#" onclick="showView('home')" class="nav-left">
+                <div class="logo-placeholder"></div>
+                <span style="font-weight: 700; letter-spacing: -0.01em;">DevDocs</span>
+            </a>
+            <span class="badge-internal">Internal Only</span>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" onclick="logout()"
+                style="margin-right: 0.5rem; font-size: 0.75rem; font-weight: 600; padding: 0.5rem 0.75rem;">
+                Logout
+            </button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Home View -->
+    <div id="home-view" class="view active">
+        <div class="home-header">
+            <h1>Internal Documentation</h1>
+            <p>Select a platform to browse technical references and guides.</p>
+        </div>
+
+        <div class="cards-grid">
+            <!-- iOS -->
+            <div class="platform-card card-ios" onclick="showPlatform('ios')">
+                <div class="card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 20.94c1.88 0 3.05-1.07 3.05-1.07s-1.15-2.07-3.05-2.07-3.05 2.07-3.05 2.07 1.17 1.07 3.05 1.07zM12 17.8c-2.48 0-4.5 2.02-4.5 4.5 0 .28.22.5.5.5h8c.28 0 .5-.22.5-.5 0-2.48-2.02-4.5-4.5-4.5zM12 2a5 5 0 0 0-5 5v5a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z" />
+                    </svg>
+                </div>
+                <div>
+                    <h2>iOS Docs</h2>
+                    <p>Swift, SwiftUI, and architecture patterns for Apple platforms.</p>
+                </div>
+                <div class="view-docs-btn">View Docs →</div>
+            </div>
+
+            <!-- Android -->
+            <div class="platform-card card-android" onclick="showPlatform('android')">
+                <div class="card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0-7.54.54l-3-3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        <path d="M14 11a5 5 0 0 0 7.54-.54l3 3a5 5 0 0 0-7.07-7.07l-1.71 1.71" />
+                    </svg>
+                </div>
+                <div>
+                    <h2>Android Docs</h2>
+                    <p>Kotlin, Jetpack Compose, and Android system integration.</p>
+                </div>
+                <div class="view-docs-btn">View Docs →</div>
+            </div>
+
+            <!-- Web -->
+            <div class="platform-card card-web" onclick="showPlatform('web')">
+                <div class="card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                </div>
+                <div>
+                    <h2>Web Docs</h2>
+                    <p>React, Next.js, and shared library documentation.</p>
+                </div>
+                <div class="view-docs-btn">View Docs →</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform View -->
+    <div id="platform-view" class="view">
+        <aside class="sidebar" id="sidebar">
+            <div id="sidebar-links">
+                <!-- Dynamically populated -->
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <button class="btn-back" onclick="showView('home')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Back to Home
+            </button>
+
+            <div id="doc-content">
+                <!-- Dynamically populated -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const state = {
+            view: 'home',
+            platform: 'ios',
+            module: 'auth',
+            theme: 'dark',
+            authenticated: false
+        };
+
+        // --- Auth Functions ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const error = document.getElementById('login-error');
+
+            // Hardcoded Credentials (simulating basic auth)
+            if (u === 'admin' && p === 'devdocs2026') {
+                state.authenticated = true;
+                localStorage.setItem('doc_auth', 'true');
+                document.body.classList.remove('unauthenticated');
+                document.getElementById('login-overlay').style.display = 'none';
+                initFromHash();
+            } else {
+                error.style.display = 'block';
+                setTimeout(() => error.style.display = 'none', 3000);
+            }
+        }
+
+        function checkAuth() {
+            if (localStorage.getItem('doc_auth') === 'true') {
+                state.authenticated = true;
+                document.body.classList.remove('unauthenticated');
+                document.getElementById('login-overlay').style.display = 'none';
+                return true;
+            }
+            return false;
+        }
+
+        function logout() {
+            localStorage.removeItem('doc_auth');
+            location.reload();
+        }
+
+        const content = {
+            ios: {
+                accent: '#007aff',
+                rgb: '0, 122, 255',
+                modules: [
+                    { category: 'Core Modules', id: 'auth', title: 'Authentication', summary: 'Standardized authentication flow for iOS apps using OAuth and biometric verification.', techDocs: 'The authentication module leverages the LocalAuthentication framework and provides a generic Keychain wrapper for secure token storage.', code: 'import UIKit\nimport LocalAuthentication\n\nfunc authenticate() {\n    let context = LAContext()\n    context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Log in to proceed") { success, error in\n        // Handle result\n    }\n}', lang: 'swift' },
+                    { category: 'Core Modules', id: 'net', title: 'Networking', summary: 'Robust networking layer built on top of async/await URLSession.', techDocs: 'Supports request interceptors, automatic retries, and strongly typed JSON decoding.', code: 'struct APIClient {\n    func fetch<T: Decodable>(_ route: Route) async throws -> T {\n        let (data, response) = try await URLSession.shared.data(for: route.request)\n        return try JSONDecoder().decode(T.self, from: data)\n    }\n}', lang: 'swift' },
+                    { category: 'Feature Modules', id: 'facescan', title: 'Face Scan', summary: 'Real-time facial scanning and liveness detection using Vision framework.', techDocs: 'Analyzes facial landmarks and depth data to ensure liveness and match against user profiles. Requires camera permission and iPhone X or later for optimal depth analysis.', code: '// iOS FaceScan Implementation\nimport Vision\n\nclass FaceScanner {\n    func process(pixelBuffer: CVPixelBuffer) {\n        let request = VNDetectFaceLandmarksRequest { request, error in\n           // Handle landmarks\n        }\n        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer).perform([request])\n    }\n}', lang: 'swift' },
+                    { category: 'Feature Modules', id: 'ai-core', title: 'AI Engine', summary: 'Integration layer for CoreML models.', techDocs: 'Provides utilities for model downloading, versioning, and thread-safe inference execution.', code: 'let model = try MLModel(contentsOf: modelURL)\nlet prediction = try model.prediction(input: input)', lang: 'swift' }
+                ]
+            },
+            android: {
+                accent: '#3ddc84',
+                rgb: '61, 220, 132',
+                modules: [
+                    { category: 'Core Modules', id: 'auth', title: 'Authentication', summary: 'Android authentication using Google Play Services and custom OAuth flows.', techDocs: 'Handles token refresh and biometric prompts using the BiometricManager API.', code: 'val signInRequest = BeginSignInRequest.builder()\n    .setGoogleIdTokenRequestOptions(googleIdOptions)\n    .build()\n\noneTapClient.beginSignIn(signInRequest).addOnSuccessListener { /* ... */ }', lang: 'kotlin' },
+                    { category: 'Core Modules', id: 'net', title: 'Networking', desc: 'Retrofit and OkHttp configuration for stable API calls.', code: '@GET("users/{user}/repos")\nsuspend fun listRepos(@Path("user") user: String): List<Repo>', lang: 'kotlin', summary: 'Standardized network client for Android.', techDocs: 'Uses Retrofit2 with Coroutines for efficient async networking.' },
+                    { category: 'Feature Modules', id: 'facescan', title: 'Face Scan', summary: 'Real-time liveness detection for Android.', techDocs: 'Utilizes ML Kit for face detection and custom shaders for frame analysis. Compatible with CameraX.', code: '// Android FaceScan Implementation\nfun onFrame(image: InputImage) {\n    FaceDetection.getClient().process(image)\n        .addOnSuccessListener { faces ->\n            // Process faces\n        }\n}', lang: 'kotlin' },
+                    { category: 'Feature Modules', id: 'ocr', title: 'OCR Processing', summary: 'Document recognition engine.', techDocs: 'Uses ML Kit Text Recognition to extract data from ID cards and receipts.', code: 'val recognizer = TextRecognition.getClient(options)\nrecognizer.process(image).addOnSuccessListener { result -> /* ... */ }', lang: 'kotlin' }
+                ]
+            },
+            web: {
+                accent: '#a855f7',
+                rgb: '168, 85, 247',
+                modules: [
+                    { category: 'Core Modules', id: 'auth', title: 'Authentication', summary: 'React-based authentication context management.', techDocs: 'Stores JWTs in memory or secure storage and handles OAuth redirects.', code: 'export const AuthProvider = ({ children }) => {\n    const [user, setUser] = useState(null);\n    return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;\n};', lang: 'javascript' },
+                    { category: 'Feature Modules', id: 'api', title: 'API Integration', summary: 'Shared API clients for browser environments.', techDocs: 'Provides Axios instances with pre-configured headers and error boundary integration.', code: 'const api = axios.create({ baseURL: "/api" });\napi.interceptors.request.use(config => {\n    config.headers.Authorization = `Bearer ${token}`;\n    return config;\n});', lang: 'javascript' }
+                ]
+            }
+        };
+
+        // --- Functions ---
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`${viewName}-view`).classList.add('active');
+            state.view = viewName;
+
+            if (viewName === 'home') {
+                document.body.style.setProperty('--active-color', 'transparent');
+                window.location.hash = '';
+            }
+        }
+
+        function showPlatform(platformId) {
+            state.platform = platformId;
+            const config = content[platformId];
+
+            // Set platform theme color
+            document.body.style.setProperty('--active-color', config.accent);
+            document.body.style.setProperty('--active-rgb', config.rgb);
+
+            renderSidebar(platformId);
+            showModule(config.modules[0].id);
+            showView('platform');
+            window.location.hash = `#/${platformId}`;
+        }
+
+        function renderSidebar(platformId) {
+            const container = document.getElementById('sidebar-links');
+            const modules = content[platformId].modules;
+            const categories = [...new Set(modules.map(m => m.category))];
+
+            container.innerHTML = categories.map(cat => `
+                <div class="sidebar-category">${cat}</div>
+                ${modules.filter(m => m.category === cat).map(mod => `
+                    <a href="#/${platformId}/${mod.id}" 
+                       class="sidebar-item ${state.module === mod.id ? 'active' : ''}" 
+                       onclick="showModule('${mod.id}')"
+                       data-module="${mod.id}">
+                       ${mod.title}
+                    </a>
+                `).join('')}
+            `).join('');
+        }
+
+        function showModule(moduleId) {
+            state.module = moduleId;
+            const platformConfig = content[state.platform];
+            const mod = platformConfig.modules.find(m => m.id === moduleId);
+
+            const container = document.getElementById('doc-content');
+            container.innerHTML = `
+                <div class="doc-page active">
+                    <h1>${mod.title}</h1>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--active-color);">Module Summary</h2>
+                        <p>${mod.summary}</p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--active-color);">Technical Documentation</h2>
+                        <p>${mod.techDocs}</p>
+                    </div>
+                    
+                    <h2>Implementation Example</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="lang-tag">${mod.lang}</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-${mod.lang}">${mod.code}</code></pre>
+                    </div>
+
+                    <div class="callout">
+                        <div class="callout-icon">💡</div>
+                        <div class="callout-text">
+                            <strong>Internal Note:</strong> Ensure you are using the latest version of the ${state.platform.toUpperCase()} library (minimum v4.0) to support these features.
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.toggle('active', item.getAttribute('data-module') === moduleId);
+            });
+
+            hljs.highlightAll();
+            closeSidebar();
+            window.location.hash = `#/${state.platform}/${moduleId}`;
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const next = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            state.theme = next;
+
+            // Toggle hljs
+            document.getElementById('hljs-dark').disabled = next === 'light';
+            document.getElementById('hljs-light').disabled = next === 'dark';
+
+            const themeBtn = document.getElementById('themeBtn');
+            themeBtn.innerHTML = next === 'dark'
+                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        function copyCode(btn) {
+            const code = btn.closest('.code-block').querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            btn.innerText = 'Copied!';
+            setTimeout(() => btn.innerText = 'Copy', 2000);
+        }
+
+        // --- Routing ---
+        function initFromHash() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#/')) {
+                const parts = hash.split('/');
+                const platform = parts[1];
+                const mod = parts[2];
+                if (content[platform]) {
+                    showPlatform(platform);
+                    if (mod) showModule(mod);
+                }
+            } else {
+                showView('home');
+            }
+            hljs.highlightAll();
+        }
+
+        window.addEventListener('load', () => {
+            if (checkAuth()) {
+                initFromHash();
+            }
+        });
+
+        window.addEventListener('popstate', () => {
+            if (state.authenticated) {
+                if (!window.location.hash || window.location.hash === '#/') showView('home');
+            }
+        });
+    </script>
+</body>
+
+</html>
